@@ -9,6 +9,9 @@ so the data has been ported in as is.
 Our goal is to be able to parse this data with code, so that we can utilize it in our code.
 """
 
+from multiprocessing.managers import ListProxy
+
+
 laptops = [
         {
             "id": "1",
@@ -66,10 +69,19 @@ laptops = [
 
 
 # 1.1 TODO: Print out the MacBook Pro url
-
+print(laptops[0]['url'])
 
 # 1.2 TODO: Write a function called `print_laptop_data` that takes in two parameters: `laptop` and `topic`, and returns nothing.
-#
+def print_laptop_data(laptop, topic):
+    if laptops[0]['productName'] == laptop:
+        print(f"{laptop} {topic}: {laptops[0]['types'][0][topic]}")
+    elif laptops[1]['productName'] == laptop:
+        print(f"{laptop} {topic}: {laptops[1]['types'][0][topic]}")
+
+
+print_laptop_data('Apple Macbook Pro', 'ram')
+print_laptop_data('Dell XPS', 'ram')
+    
 #   If `laptop` is 'Apple Macbook Pro', the function should print out data about that computer.
 #   If `laptop` is 'Dell XPS', the function should print out data about that computer.
 #
@@ -92,26 +104,50 @@ laptops = [
 #   1.3.1: All possible prices of the Apple Macbook Pro.
 #   1.3.2: All the color options for the Dell XPS.
 #   1.3.3: The screen_size of the Dell XPS.
-
+print_laptop_data('Apple Macbook Pro', 'price')
+print_laptop_data('Dell XPS', 'colors')
+print_laptop_data('Dell XPS', 'screen_size')
 
 # 2.1 TODO: Write a function called `list_prices` that takes one parameter: a list of computers, and returns nothing.
 #   Using nested loops, the function should print out all possible computer prices, one price on each line.
 #   No need to specify which computer each price belongs to.
+def list_prices(computers):
+    for computer in computers:
+        for ty in computer["types"]:
+            for price in ty["price"]:
+                print(price)
 
 
+    
 # 2.2 TODO: Call your function to see that it works.
-
+list_prices(laptops)
 
 # 3.0 Suppose that the two versions of the 16-inch MacBook Pro are no longer available:
 #   - In the color 'space gray'
 #   - With '1 TB SSD' storage
 
 # 3.1 TODO: Update the `laptops` dictionary to reflect these changes.
-
+del laptops[0]['types'][1]['colors'][0]
+del laptops[0]['types'][1]['storage'][1]
 
 # 3.2 TODO: Print out the Macbook Pro dictionary to see the changes.
-
+print(laptops[0])
 
 # BONUS TODO: Write a function called `get_price_range` that returns the minimum and maximum prices out of all the options.
-
+def get_price_range(computers):
+    prices = []
+    highest = 0
+    lowest = 0
+    for computer in computers:
+        for item in computer["types"]:
+            for price in item["price"]:
+                prices.append(price)
+    for ind in prices:
+        if ind > highest:
+            highest = ind
+            lowest = highest
+        if ind < lowest:
+            lowest = ind
+    print(lowest, highest)
+get_price_range(laptops)
 # ^ Expected outcome: (999, 2799)
